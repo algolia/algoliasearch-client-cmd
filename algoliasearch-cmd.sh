@@ -1,6 +1,6 @@
 #!/bin/bash
 API_KEY="YourAPIKey"
-APPLICATION_ID="YouApplicationID"
+APPLICATION_ID="YourApplicationID"
 HOST="https://user-1.algolia.io"
 GZIP=0
 VERBOSE=0
@@ -59,10 +59,11 @@ if [ "x$ALGOLIA_APPLICATION_ID" = "x" ]; then
 else
   headers+=(--header "X-Algolia-Application-Id: $ALGOLIA_APPLICATION_ID")
 fi
+ALGOLIA_HOSTNAME=
 if [ "x$ALGOLIA_HOST" = "x" ]; then
-  headers+=(--header "X-Algolia-Application-Id: $HOST")
+  ALGOLIA_HOSTNAME=$HOST
 else
-  headers+=(--header "X-Algolia-Application-Id: $ALGOLIA_HOST")
+  ALGOLIA_HOSTNAME=$ALGOLIA_HOST
 fi
 if [ "x$GZIP" = "x1" ]; then
     headers+=(--header "Accept-Encoding: gzip,deflate")
@@ -79,11 +80,11 @@ case $1 in
         if [ -z "$3" ]; then
             usage
         fi
-        curl "${headers[@]}" --request POST "$HOST/1/indexes/$2/batch" --data-binary @$3
+        curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/batch" --data-binary @$3
         echo
         ;;
     indexes)
-        curl "${headers[@]}" --request GET "$HOST/1/indexes"
+        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes"
         echo
         ;;
     delete)
@@ -93,14 +94,14 @@ case $1 in
         if [ -z "$3" ]; then
             usage
         fi
-        curl "${headers[@]}" --request DELETE "$HOST/1/indexes/$2/$3"
+        curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/indexes/$2/$3"
         echo
         ;;
     deleteIndex)
         if [ -z "$2" ]; then
             usage
         fi
-        curl "${headers[@]}" --request DELETE "$HOST/1/indexes/$2"
+        curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/indexes/$2"
         echo
         ;;
     changeSettings)
@@ -110,14 +111,14 @@ case $1 in
         if [ -z "$3" ]; then
             usage
         fi
-        curl "${headers[@]}" --request PUT "$HOST/1/indexes/$2/settings" --data-binary @$3
+        curl "${headers[@]}" --request PUT "$ALGOLIA_HOSTNAME/1/indexes/$2/settings" --data-binary @$3
         echo
         ;;
     getACL)
         if [ -z "$2" ]; then
-          curl "${headers[@]}" --request GET "$HOST/1/keys"
+          curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/keys"
         else
-          curl "${headers[@]}" --request GET "$HOST/1/keys/$2"
+          curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/keys/$2"
 	fi
         echo
         ;;
@@ -125,14 +126,14 @@ case $1 in
         if [ -z "$2" ]; then
           usage
 	fi
-        curl "${headers[@]}" --request DELETE "$HOST/1/keys/$2"
+        curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/keys/$2"
         echo
         ;;
     addACL)
         if [ -z "$2" ]; then
           usage
 	fi
-        curl "${headers[@]}" --request POST "$HOST/1/keys" --data-binary @$2
+        curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/keys" --data-binary @$2
         echo
         ;;
 
@@ -143,14 +144,14 @@ case $1 in
         if [ -z "$3" ]; then
             usage
         fi
-        curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/task/$3"
+        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/task/$3"
         echo
         ;;
     getSettings)
         if [ -z "$2" ]; then
             usage
         fi
-        curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/settings"
+        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/settings"
         echo
         ;;
     replace)
@@ -164,7 +165,7 @@ case $1 in
             usage
         fi
 
-        curl "${headers[@]}" --request PUT "$HOST/1/indexes/$2/$3" --data-binary @$4
+        curl "${headers[@]}" --request PUT "$ALGOLIA_HOSTNAME/1/indexes/$2/$3" --data-binary @$4
         echo
         ;;
     partialUpdate)
@@ -178,7 +179,7 @@ case $1 in
             usage
         fi
 
-        curl "${headers[@]}" --request POST "$HOST/1/indexes/$2/$3/partial" --data-binary @$4
+        curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/$3/partial" --data-binary @$4
         echo
         ;;
     get)
@@ -189,9 +190,9 @@ case $1 in
             usage
         fi
         if [ -n "$4" ]; then
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/$3?$4"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/$3?$4"
         else
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/$3"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/$3"
         fi
         echo
         ;;
@@ -203,9 +204,9 @@ case $1 in
             usage
         fi
         if [ -n "$4" ]; then
-            curl "${headers[@]}" --request PUT "$HOST/1/indexes/$2/$4" --data-binary @$3 
+            curl "${headers[@]}" --request PUT "$ALGOLIA_HOSTNAME/1/indexes/$2/$4" --data-binary @$3 
         else
-            curl "${headers[@]}" --request POST "$HOST/1/indexes/$2" --data-binary @$3
+            curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2" --data-binary @$3
         fi
         echo
         ;;
@@ -214,9 +215,9 @@ case $1 in
             usage
         fi
         if [ -n "$3" ]; then
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/?$3"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?$3"
         else
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2"
         fi
         echo
         ;;
@@ -228,9 +229,9 @@ case $1 in
             usage
         fi
         if [ -n "$4" ]; then
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/?query=$3&$4"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?query=$3&$4"
         else
-            curl "${headers[@]}" --request GET "$HOST/1/indexes/$2/?query=$3"
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?query=$3"
         fi
         echo
         ;;
