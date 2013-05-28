@@ -1,7 +1,4 @@
 
 { 
-    "hitsPerPage": 50,
-    "attributesToIndex": ["name"],
-    "attributesToHighlight": ["name"],
     "customRanking": ["desc(population)", "asc(name)"]
 }
