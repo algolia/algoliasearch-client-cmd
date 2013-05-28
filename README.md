@@ -15,9 +15,9 @@ HOST="https://user-1.algolia.io"
 
 Quick Start
 -------------
-This quick start is a 30 seconds steps where you can learn how to index and search objects.
+This quick start is a 30 seconds tutorial where you can learn how to index and search objects.
 
-Without any prior-configuration, you can index the 1000 worldwide biggest cities in the 'cities' index with a simple command line (cities are extracted from [Geonames](http://www.geonames.org) and formated in our batch format, ```body```attribute contains the object to add in the index).
+Without any prior-configuration, you can index the list of 1000 biggest cities in the ```cities``` index ([cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/1000-cities.json) file contains city names extracted from [Geonames](http://www.geonames.org) and formated in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch), ```body```attribute contains the user-object and can contains any valid JSON).
 ```sh
 ./algoliasearch-cmd.sh batch cities 1000-cities.json
 ```
@@ -28,7 +28,7 @@ You can then start to search for a city name (even with typos):
 ./algoliasearch-cmd.sh query cities 'loz anqel'
 ```
 
-You can finally change the settings to sort by population while keeping good out-of-the-box relevance:
+You can change the settings to sort by population while keeping good out-of-the-box relevance using content of [settings-cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/settings-cities.json) file:
 ```sh
 ./algoliasearch-cmd.sh changeSettings cities settings-cities.json
 ```
