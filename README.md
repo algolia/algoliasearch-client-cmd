@@ -36,6 +36,7 @@ You can change the settings to sort by population while keeping good out-of-the-
 And then search for all cities that start with a "s":
 ```sh
 ./algoliasearch-cmd.sh query cities 's'
+```
 
 Search 
 -------------
