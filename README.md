@@ -13,6 +13,30 @@ APPLICATION_ID="YourApplicationID"
 HOST="https://user-1.algolia.io"
 ```
 
+Quick Start
+-------------
+This quick start is a 30 seconds steps where you can learn how to index and search objects.
+
+Without any prior-configuration, you can index the 1000 worldwide biggest cities in the 'cities' index with a simple command line (cities are extracted from [Geonames](http://www.geonames.org) and formated in our batch format, ```body```attribute contains the object to add in the index).
+```sh
+./algoliasearch-cmd.sh batch cities 1000-cities.json
+```
+
+You can then start to search for a city name (even with typos):
+```sh
+./algoliasearch-cmd.sh query cities 'san fran'
+./algoliasearch-cmd.sh query cities 'loz anqel'
+```
+
+You can finally change the settings to sort by population while keeping good out-of-the-box relevance:
+```sh
+./algoliasearch-cmd.sh changeSettings cities settings-cities.json
+```
+
+And then search for all cities that start with a "s":
+```sh
+./algoliasearch-cmd.sh query cities 's'
+
 Search 
 -------------
 To perform a search, you have just to specify the index name and the query. 
