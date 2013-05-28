@@ -2,6 +2,7 @@ Algolia Search Command Line API Client
 ==================
 
 This command line API Client is a small wrapper around CURL to easily expose our API.
+The service is currently in Beta, you can request an invite on our [website](http://www.algolia.com/pricing/).
 
 Setup
 -------------
