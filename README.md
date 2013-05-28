@@ -15,12 +15,13 @@ HOST="https://user-1.algolia.io"
 
 Quick Start
 -------------
-This quick start is a 30 seconds tutorial where you can learn how to index and search objects.
+This quick start is a 30 seconds tutorial where you can discover how to index and search objects.
 
-Without any prior-configuration, you can index the list of 1000 biggest cities in the ```cities``` index ([cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/1000-cities.json) file contains city names extracted from [Geonames](http://www.geonames.org) and formated in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch), ```body```attribute contains the user-object and can contains any valid JSON).
+Without any prior-configuration, you can index the 1000 world's biggest cities in the ```cities``` index with the following command:
 ```sh
 ./algoliasearch-cmd.sh batch cities 1000-cities.json
 ```
+The [1000-cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/1000-cities.json) file contains city names extracted from [Geonames](http://www.geonames.org) and formated in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch). The ```body```attribute contains the user-object that can be any valid JSON.
 
 You can then start to search for a city name (even with typos):
 ```sh
@@ -28,12 +29,12 @@ You can then start to search for a city name (even with typos):
 ./algoliasearch-cmd.sh query cities 'loz anqel'
 ```
 
-You can change the settings to sort by population while keeping good out-of-the-box relevance using content of [settings-cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/settings-cities.json) file:
+Settings can be customized to tune the index behavior. For example you can add a custom sort by population to the already good out-of-the-box relevance to raise bigger cities above smaller ones. To update the settings, use the following command with the [settings-cities.json](https://github.com/algolia/algoliasearch-client-cmd/blob/master/settings-cities.json) file:
 ```sh
 ./algoliasearch-cmd.sh changeSettings cities settings-cities.json
 ```
 
-And then search for all cities that start with a "s":
+And then search for all cities that start with an "s":
 ```sh
 ./algoliasearch-cmd.sh query cities 's'
 ```
