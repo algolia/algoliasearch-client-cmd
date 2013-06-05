@@ -1,7 +1,7 @@
 #!/bin/bash
 API_KEY="YourAPIKey"
 APPLICATION_ID="YourApplicationID"
-HOST="https://user-1.algolia.io"
+HOST="user-1.algolia.io"
 GZIP=0
 VERBOSE=0
 
@@ -61,9 +61,9 @@ else
 fi
 ALGOLIA_HOSTNAME=
 if [ "x$ALGOLIA_HOST" = "x" ]; then
-  ALGOLIA_HOSTNAME=$HOST
+  ALGOLIA_HOSTNAME=https://$HOST
 else
-  ALGOLIA_HOSTNAME=$ALGOLIA_HOST
+  ALGOLIA_HOSTNAME=https://$ALGOLIA_HOST
 fi
 if [ "x$GZIP" = "x1" ]; then
     headers+=(--header "Accept-Encoding: gzip,deflate")
