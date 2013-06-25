@@ -11,7 +11,7 @@ To setup the command line client, you have just to edit `algoliasearch-cmd.sh` a
 ```sh
 API_KEY="YourAPIKey"
 APPLICATION_ID="YourApplicationID"
-HOST="user-1.algolia.io"
+HOST="YourHostname-1.algolia.io"
 ```
 
 Quick Start
