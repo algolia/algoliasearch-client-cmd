@@ -4,6 +4,24 @@ Algolia Search Command Line API Client
 This command line API Client is a small wrapper around CURL to easily expose our API.
 The service is currently in Beta, you can request an invite on our [website](http://www.algolia.com/pricing/).
 
+Table of Content
+-------------
+**Get started**
+
+1. [Setup](#setup) 
+1. [Quick Start](#quick-start)
+
+**Commands reference**
+
+1. [Search](#search)
+1. [Add a new object](#add-a-new-object-in-the-index)
+1. [Update an object](#update-an-existing-object-in-the-index)
+1. [Get an object](#get-an-object)
+1. [Delete an object](#delete-an-object)
+1. [Index settings](#index-settings)
+1. [Delete an index](#delete-an-index)
+1. [Security / User API Keys](#security--user-api-keys)
+
 Setup
 -------------
 To setup the command line client, you have just to edit `algoliasearch-cmd.sh` and change `API_KEY`, `APPLICATION_ID` and `HOST` with your API-Key, ApplicationID, API-Key and the first hostname that you can find on your Algolia account.
@@ -40,7 +58,7 @@ And then search for all cities that start with an "s":
 ./algoliasearch-cmd.sh query cities 's'
 ```
 
-Search 
+Search
 -------------
 To perform a search, you have just to specify the index name and the query. 
 
@@ -53,7 +71,7 @@ algoliasearch-cmd.sh query cities "query string"
 You can use the following optional arguments:
 
  * **attributes**: a string that contains the names of attributes to retrieve separated by a comma.<br/>By default all attributes are retrieved.
- * **attributesToHighlight**: a string that contains the names of attributes to highlight separated by a comma.<br/>By default indexed attributes are highlighted.
+ * **attributesToHighlight**: a string that contains the names of attributes to highlight separated by a comma.<br/>By default indexed attributes are highlighted. Numerical attributes cannot be highlighted. A **matchLevel** is returned for each highlighted attribute and can contain: "full" if all the query terms were found in the attribute, "partial" if only some of the query terms were found, or "none" if none of the query terms were found.
  * **attributesToSnippet**: a string that contains the names of attributes to snippet alongside the number of words to return (syntax is 'attributeName:nbWords'). Attributes are separated by a comma (Example: "attributesToSnippet=name:10,content:10").<br/>By default no snippet is computed.
  * **minWordSizeForApprox1**: the minimum number of characters in a query word to accept one typo in this word.<br/>Defaults to 3.
  * **minWordSizeForApprox2**: the minimum number of characters in a query word to accept two typos in this word.<br/>Defaults to 7.
@@ -213,4 +231,68 @@ algoliasearch-cmd.sh getSettings test
 ```sh
 echo '{"customRanking": ["desc(population)", "asc(name)"]}' > rankingSetting.json
 algoliasearch-cmd.sh changeSettings test rankingSetting.json
+```
+
+Delete an index
+-------------
+You can delete an index using its name:
+
+```sh
+algoliasearch-cmd.sh deletIndex cities
+```
+
+Security / User API Keys
+-------------
+
+The admin API key provides full control of all your indexes. 
+You can also generate user API keys to control security. 
+These API keys can be restricted to a set of operations or/and restricted to a given index.
+
+To list existing keys, you can use `listUserKeys` method:
+```sh
+# Lists global API Keys
+algoliasearch-cmd.sh getACL
+# Lists API Keys that can access only to this index
+algoliasearch-cmd.sh getIndexACL
+```
+
+Each key is defined by a set of rights that specify the authorized actions. The different rights are:
+ * **search**: allows to search,
+ * **addObject**: allows to add/update an object in the index,
+ * **deleteObject**: allows to delete an existing object,
+ * **deleteIndex**: allows to delete index content,
+ * **settings**: allows to get index settings,
+ * **editSettings**: allows to change index settings.
+
+Example of API Key creation:
+```sh
+# Creates a new global API key that can only perform search actions
+echo '{"acl": ["search"]}' > acl.json
+algoliasearch-cmd.sh addACL acl.json
+# Creates a new API key that can only perform search action on this index
+algoliasearch-cmd.sh addIndexACL acl.json
+```
+You can also create a temporary API key that will be valid only for a specific period of time (in seconds):
+```sh
+# Creates a new global API key that is valid for 300 seconds
+echo '{"acl": ["search"], "validity": 300}' > acl.json
+algoliasearch-cmd.sh addACL acl.json
+# Creates a new index specific API key valid for 300 seconds
+algoliasearch-cmd.sh addIndexACL acl.json
+```
+
+Get the rights of a given key:
+```sh
+# Gets the rights of a global key
+algoliasearch-cmd.sh getACL f420238212c54dcfad07ea0aa6d5c45f
+# Gets the rights of an index specific key
+algoliasearch-cmd.sh getIndexACL 71671c38001bf3ac857bc82052485107
+```
+
+Delete an existing key:
+```sh
+# Deletes a global key
+algoliasearch-cmd.sh deleteACL f420238212c54dcfad07ea0aa6d5c45f
+# Deletes an index specific key
+algoliasearch-cmd.sh deleteIndexACL 71671c38001bf3ac857bc82052485107
 ```

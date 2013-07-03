@@ -45,10 +45,18 @@ usage() {
     echo "      $0 addACL ACL_FILENAME"
     echo "  Delete one User defined API Key"
     echo "      $0 delACL keyName"
-
+    echo ""
+    echo "  Get lists of User defined API Keys for one index"
+    echo "      $0 getIndexACL IndexName"
+    echo "  Get lists details of one User defined API Key for one Index"
+    echo "      $0 getIndexACL IndexName keyName"
+    echo "  Add one User defined API Key"
+    echo "      $0 addIndexACL IndexName ACL_FILENAME"
+    echo "  Delete one User defined API Key"
+    echo "      $0 delIndexACL IndexName keyName"
     exit 1;
 }
-headers=(-k --header "Content-Type: application/json; charset=utf-8")
+headers=(--header "Content-Type: application/json; charset=utf-8")
 if [ "x$ALGOLIA_API_KEY" = "x" ]; then
   headers+=(--header "X-Algolia-API-Key: $API_KEY")
 else
@@ -134,6 +142,37 @@ case $1 in
           usage
 	fi
         curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/keys" --data-binary @$2
+        echo
+        ;;
+    getIndexACL)
+        if [ -z "$2" ]; then
+          usage
+        fi
+        if [ -z "$3" ]; then
+          curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/keys"
+        else
+          curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/keys/$3"
+        fi
+        echo
+        ;;
+    deleteIndexACL)
+        if [ -z "$2" ]; then
+          usage
+        fi
+        if [ -z "$3" ]; then
+          usage
+        fi
+        curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/indexes/$2/keys/$3"
+        echo
+        ;;
+    addIndexACL)
+        if [ -z "$2" ]; then
+          usage
+        fi
+        if [ -z "$3" ]; then
+          usage
+        fi
+        curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/keys" --data-binary @$3
         echo
         ;;
 
