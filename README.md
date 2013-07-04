@@ -254,7 +254,7 @@ algoliasearch-cmd.sh deletIndex cities
 Batch writes
 -------------
 
-You may want to perform multiple operations with one API call to reduce latency.
+You may want to perform multiple operations with a single API call to reduce latency.
 You can format the input in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch) and use the command line tool with the `batch` argument to send the batch.
 
 Example:
