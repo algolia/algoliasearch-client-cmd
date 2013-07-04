@@ -17,9 +17,11 @@ Table of Content
 1. [Add a new object](#add-a-new-object-in-the-index)
 1. [Update an object](#update-an-existing-object-in-the-index)
 1. [Get an object](#get-an-object)
+1. [List indexes](#list-indexes)
 1. [Delete an object](#delete-an-object)
 1. [Index settings](#index-settings)
 1. [Delete an index](#delete-an-index)
+1. [Batch writes](#batch-writes)
 1. [Security / User API Keys](#security--user-api-keys)
 
 Setup
@@ -233,12 +235,32 @@ echo '{"customRanking": ["desc(population)", "asc(name)"]}' > rankingSetting.jso
 algoliasearch-cmd.sh changeSettings test rankingSetting.json
 ```
 
+List indexes
+-------------
+You can list all your indexes with their associated information (number of entries, disk size, etc.) with the `indexes` argument:
+
+```sh
+algoliasearch-cmd.sh indexes
+```
+
 Delete an index
 -------------
 You can delete an index using its name:
 
 ```sh
 algoliasearch-cmd.sh deletIndex cities
+```
+
+Batch writes
+-------------
+
+You may want to perform multiple operations with one API call to reduce latency.
+You can format the input in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch) and use the command line tool with the batch argument.
+
+Example using automatic `objectID` assignement
+```sh
+echo '{ "requests":[{"action": "addObject", "body": { "name": "San Francisco", "population": 805235} }, {"action": "addObject", "body": { "name": "Los Angeles", "population": 3792621} } ] }' > batch.json
+algoliasearch-cmd.sh batch cities batch.json
 ```
 
 Security / User API Keys
