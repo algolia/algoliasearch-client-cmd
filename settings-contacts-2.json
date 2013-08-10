@@ -1,0 +1,4 @@
+
+{ 
+    "attributesToIndex": ["lastname", "firstname", "company", "email", "city", "address"]
+}
