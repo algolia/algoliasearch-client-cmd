@@ -26,7 +26,7 @@ Table of Content
 
 Setup
 -------------
-To setup the command line client, you have just to [download](https://github.com/algolia/algoliasearch-client-cmd/archive/master.zip) `algoliasearch-cmd.sh` and change `API_KEY`, `APPLICATION_ID` and `HOST` with your API-Key and ApplicationID that you can find on your Algolia account.
+To setup the command line client, you have just to [download](https://github.com/algolia/algoliasearch-client-cmd/archive/master.zip) `algoliasearch-cmd.sh` and change `API_KEY`, `APPLICATION_ID` and `HOST` with the values you can find on your Algolia account.
 
 ```sh
 API_KEY="YourAPIKey"
