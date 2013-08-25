@@ -1,7 +1,7 @@
 #!/bin/bash
 API_KEY="YourAPIKey"
 APPLICATION_ID="YourApplicationID"
-HOST="$APPLICATION_ID-1.algolia.io"
+HOST="$APPLICATION_ID.algolia.io"
 GZIP=0
 VERBOSE=0
 
