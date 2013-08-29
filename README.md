@@ -43,7 +43,7 @@ Without any prior-configuration, you can index [500 contacts](https://github.com
 ```sh
 ./algoliasearch-cmd.sh batch contacts contacts.json
 ```
-The contacts.json file is formated in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch). The ```body```attribute contains the user-object that can be any valid JSON.
+The contacts.json file is formated in our [batch format](http://www.algolia.com/doc/rest_api#Batch). The ```body```attribute contains the user-object that can be any valid JSON.
 
 You can then start to search for a contact firstname, lastname, company, ... (even with typos):
 ```sh
