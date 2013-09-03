@@ -26,6 +26,10 @@ usage() {
     echo "      $0 delete INDEXNAME OBJECTID"
     echo "  Partial update an object in the index:"
     echo "      $0 partialUpdate INDEXNAME OBJECTID OBJECT_FILENAME [args]"
+    echo "  Copy index:"
+    echo "      $0 copy SRCINDEXNAME DSTINDEXNAME"
+    echo "  Move index:"
+    echo "      $0 move SRCINDEXNAME DSTINDEXNAME"
     echo ""
     echo "  Get settings"
     echo "      $0 getSettings INDEXNAME"
@@ -105,6 +109,25 @@ case $1 in
         curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/indexes/$2/$3"
         echo
         ;;
+    move)
+        if [ -z "$2" ]; then
+            usage
+	fi
+        if [ -z "$3" ]; then
+            usage
+	fi
+	curl "${headers[@]}" --request POST --data-binary "{ \"operation\":\"move\", \"destination\":\"$3\"}" "$ALGOLIA_HOSTNAME/1/indexes/$2/operation"
+	;;
+    copy)
+        if [ -z "$2" ]; then
+            usage
+	fi
+        if [ -z "$3" ]; then
+            usage
+	fi
+	curl "${headers[@]}" --request POST --data-binary "{ \"operation\":\"copy\", \"destination\":\"$3\"}" "$ALGOLIA_HOSTNAME/1/indexes/$2/operation"
+	;;
+
     deleteIndex)
         if [ -z "$2" ]; then
             usage
