@@ -58,6 +58,9 @@ usage() {
     echo "      $0 addIndexACL IndexName ACL_FILENAME"
     echo "  Delete one User defined API Key"
     echo "      $0 delIndexACL IndexName keyName"
+    echo ""
+    echo "  Get Last Logs"
+    echo "      $0 logs"
     exit 1;
 }
 headers=(--header "Content-Type: application/json; charset=utf-8")
@@ -297,6 +300,9 @@ case $1 in
         fi
         echo
         ;;
+    logs)
+        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/logs"
+	;;
     *)
         usage
         ;;
