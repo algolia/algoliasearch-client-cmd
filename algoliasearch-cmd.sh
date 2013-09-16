@@ -60,7 +60,7 @@ usage() {
     echo "      $0 delIndexACL IndexName keyName"
     echo ""
     echo "  Get Last Logs"
-    echo "      $0 logs"
+    echo "      $0 logs [args]"
     exit 1;
 }
 headers=(--header "Content-Type: application/json; charset=utf-8")
@@ -301,7 +301,11 @@ case $1 in
         echo
         ;;
     logs)
-        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/logs"
+        if [ -n "$2" ]; then
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/logs?$2"
+        else
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/logs"
+        fi
 	;;
     *)
         usage
