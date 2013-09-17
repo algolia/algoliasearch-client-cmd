@@ -367,7 +367,9 @@ algoliasearch-cmd.sh deleteIndexACL 71671c38001bf3ac857bc82052485107
 Copy or rename an index
 -------------
 
-You can easily copy or rename an existing index using the `copy` and `move` command.
+You can easily copy or rename an existing index using the `copy` and `move` command. 
+
+**Note**: Move and copy commands overwrite destination index if the name of already used.
 
 The move command is particulary usefull is you want to update a big index atomically from one version to another. For example, if you recreate your index `MyIndex`each night from a database by batch, you have just to have just to :
  1. Import your database in a new index using [batches](#batch-writes). We will call this new index `MyNewIndex`
