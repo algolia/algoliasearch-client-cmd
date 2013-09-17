@@ -24,7 +24,7 @@ Table of Content
 1. [Batch writes](#batch-writes)
 1. [Security / User API Keys](#security--user-api-keys)
 1. [Copy or rename an index](#copy-or-rename-an-index)
-1. [logs](#logs)
+1. [Logs](#logs)
 
 Setup
 -------------
@@ -368,7 +368,10 @@ Copy or rename an index
 -------------
 
 You can easily copy or rename an existing index using the `copy` and `move` command.
-The move command is particulary usefull is you want to update a big index using several batch commands. For example if you want to fully recreate the `MyIndexName`: you can create a new index named `MyNewIndexName` using severals batch commands and when your index is ready you can rename it to `MyIndexName` using the move command. This will automatically override the old index and new queries will be served on this index.
+
+The move command is particulary usefull is you want to update a big index atomically from one version to another. For example, if you recreate your index `MyIndex`each night from a database by batch, you have just to have just to :
+ 1. Import your database in a new index using [batches](#batch-writes). We will call this new index `MyNewIndex`
+ 1. Rename `MyNewIndex` in `MyIndexName` using the move command. This will automatically override the old index and new queries will be served on this index.
 
 ```sh
 # Rename index1 in index2
