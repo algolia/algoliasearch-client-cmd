@@ -91,7 +91,8 @@ algoliasearch-cmd.sh query contacts "query string"
 You can use the following optional arguments:
 
  * **attributes**: a string that contains the names of attributes to retrieve separated by a comma.<br/>By default all attributes are retrieved.
- * **numerics**: The list of numeric filters you want to apply separated by a comma. The syntax of one filter is `attributeName` followed by `operand` followed by `value. Supported operands are `<`, `<=`, `=`, `>` and `>=`. You can have multiple conditions on one attribute like for example `numerics=price>100,price<1000`.
+ * **numerics**: The list of numeric filters you want to apply separated by a comma. The syntax of one filter is `attributeName` followed by `operand` followed by `value`. Supported operands are `<`, `<=`, `=`, `>` and `>=`. 
+ You can have multiple conditions on one attribute like for example `numerics=price>100,price<1000`.
  * **attributesToHighlight**: a string that contains the names of attributes to highlight separated by a comma.<br/>By default indexed attributes are highlighted. Numerical attributes cannot be highlighted. A **matchLevel** is returned for each highlighted attribute and can contain: "full" if all the query terms were found in the attribute, "partial" if only some of the query terms were found, or "none" if none of the query terms were found.
  * **attributesToSnippet**: a string that contains the names of attributes to snippet alongside the number of words to return (syntax is 'attributeName:nbWords'). Attributes are separated by a comma (Example: "attributesToSnippet=name:10,content:10").<br/>By default no snippet is computed.
  * **minWordSizeForApprox1**: the minimum number of characters in a query word to accept one typo in this word.<br/>Defaults to 3.
@@ -378,7 +379,7 @@ The move command is particulary usefull is you want to update a big index atomic
 # Rename MyNewIndex in MyIndex
 algoliasearch-cmd.sh move MyNewIndex MyIndex
 # Copy MyNewIndex in MyIndex
-algoliasearch-cmd.sh copy index1 index2
+algoliasearch-cmd.sh copy MyNewIndex MyIndex
 ```
 
 Logs
