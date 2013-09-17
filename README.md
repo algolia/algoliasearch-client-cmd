@@ -23,7 +23,8 @@ Table of Content
 1. [Delete an index](#delete-an-index)
 1. [Batch writes](#batch-writes)
 1. [Security / User API Keys](#security--user-api-keys)
-1. [Last logs](#last-Logs)
+1. [Copy or rename an index](#copy-or-rename-an-index)
+1. [logs](#logs)
 
 Setup
 -------------
@@ -363,7 +364,20 @@ algoliasearch-cmd.sh deleteACL f420238212c54dcfad07ea0aa6d5c45f
 algoliasearch-cmd.sh deleteIndexACL 71671c38001bf3ac857bc82052485107
 ```
 
-Last Logs
+Copy or rename an index
+-------------
+
+You can easily copy or rename an existing index using the `copy` and `move` command.
+The move command is particulary usefull is you want to update a big index using several batch commands. For example if you want to fully recreate the `MyIndexName`: you can create a new index named `MyNewIndexName` using severals batch commands and when your index is ready you can rename it to `MyIndexName` using the move command. This will automatically override the old index and new queries will be served on this index.
+
+```sh
+# Rename index1 in index2
+algoliasearch-cmd.sh move index1 index2
+# Copy index1 in index2
+algoliasearch-cmd.sh copy index1 index2
+```
+
+Logs
 -------------
 
 You can retrieve last logs via this API. Each log entry contains: 
