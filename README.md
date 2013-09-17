@@ -368,17 +368,16 @@ Copy or rename an index
 -------------
 
 You can easily copy or rename an existing index using the `copy` and `move` command. 
+**Note**: Move and copy commands overwrite destination index.
 
-**Note**: Move and copy commands overwrite destination index if the name of already used.
-
-The move command is particulary usefull is you want to update a big index atomically from one version to another. For example, if you recreate your index `MyIndex`each night from a database by batch, you have just to have just to :
+The move command is particulary usefull is you want to update a big index atomically from one version to another. For example, if you recreate your index `MyIndex`each night from a database by batch, you have just to :
  1. Import your database in a new index using [batches](#batch-writes). We will call this new index `MyNewIndex`
- 1. Rename `MyNewIndex` in `MyIndexName` using the move command. This will automatically override the old index and new queries will be served on this index.
+ 1. Rename `MyNewIndex` in `MyIndex` using the move command. This will automatically override the old index and new queries will be served on this index.
 
 ```sh
-# Rename index1 in index2
-algoliasearch-cmd.sh move index1 index2
-# Copy index1 in index2
+# Rename MyNewIndex in MyIndex
+algoliasearch-cmd.sh move MyNewIndex MyIndex
+# Copy MyNewIndex in MyIndex
 algoliasearch-cmd.sh copy index1 index2
 ```
 
