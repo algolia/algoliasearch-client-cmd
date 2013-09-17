@@ -23,7 +23,7 @@ Table of Content
 1. [Delete an index](#delete-an-index)
 1. [Batch writes](#batch-writes)
 1. [Security / User API Keys](#security--user-api-keys)
-1. [Last logs](#Last-Logs)
+1. [Last logs](#last-Logs)
 
 Setup
 -------------
@@ -366,8 +366,8 @@ algoliasearch-cmd.sh deleteIndexACL 71671c38001bf3ac857bc82052485107
 Last Logs
 -------------
 
-You can retrieve logs of you last API calls. Each log entry contains: 
- * Timestamp
+You can retrieve last logs via this API. Each log entry contains: 
+ * Timestamp in ISO-8601 format
  * Client IP
  * Request Headers (API-Key is obfuscated)
  * Request URL
@@ -377,7 +377,7 @@ You can retrieve logs of you last API calls. Each log entry contains:
  * Answer body
  * SHA1 ID of entry
 
-We keep a trace of the last 1000 API calls, you can navigate into them using the offset/length parameter:
+You can retrieve log of your last 1000 API calls and you can navigate into them using the offset/length parameter:
  * ***offset***: Specify the first entry to retrieve (0-based, 0 is the most recent log entry). Default to 0.
  * ***length***: Specify the maximum number of entries to retrieve starting at offset. Default to 10. Maximum allowed value: 1000.
 
@@ -387,4 +387,3 @@ We keep a trace of the last 1000 API calls, you can navigate into them using the
  # Get last 100 log entries
  algoliasearch-cmd.sh logs "length=100"
  ```
- 
