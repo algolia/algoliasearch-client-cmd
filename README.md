@@ -90,14 +90,14 @@ algoliasearch-cmd.sh query contacts "query string"
 ```
 
 You can use the following optional arguments:
- * **page**: (integer) Pagination parameter used to select the page to retrieve. Page is zero-based and defaults to 0. Thus, to retrieve the 10th page you need to set `page=9`
+ * **page**: (integer) Pagination parameter used to select the page to retrieve.<br/>Page is zero-based and defaults to 0. Thus, to retrieve the 10th page you need to set `page=9`
  * **hitsPerPage**: (integer) Pagination parameter used to select the number of hits per page. Defaults to 20.
- * **attributesToRetrieve**: a string that contains the list of object attributes you want to retrieve (let you minimize the answer size).<br/> Attributes are separated with a comma (for example `"name,address"` ), you can also use a string array encoding (for example `["name","address"]` ). By default, all attributes are retrieved. You can also use `* to retrieve all values when an `attributesToRetrieve setting is specified for your index.
- * **attributesToHighlight**: a string that contains the list of attributes you want to highlight according to the query. Attributes are separated by a comma. You can also use a string array encoding (for example `["name","address"]` ). If an attribute has no match for the query, the raw value is returned. By default all indexed text attributes are highlighted. You can use `*` if you want to highlight all textual attributes. Numerical attributes are not highlighted. A matchLevel is returned for each highlighted attribute and can contain:
+ * **attributesToRetrieve**: a string that contains the list of object attributes you want to retrieve (let you minimize the answer size).<br/> Attributes are separated with a comma (for example `"name,address"`), you can also use a string array encoding (for example `["name","address"]` ). By default, all attributes are retrieved. You can also use `* to retrieve all values when an **attributesToRetrieve** setting is specified for your index.
+ * **attributesToHighlight**: a string that contains the list of attributes you want to highlight according to the query. Attributes are separated by a comma. You can also use a string array encoding (for example `["name","address"]`). If an attribute has no match for the query, the raw value is returned. By default all indexed text attributes are highlighted. You can use `*` if you want to highlight all textual attributes. Numerical attributes are not highlighted. A matchLevel is returned for each highlighted attribute and can contain:
   * **full**: if all the query terms were found in the attribute,
   * **partial**: if only some of the query terms were found,
   * **none**: if none of the query terms were found.
- * **attributesToSnippet**: a string that contains the list of attributes to snippet alongside the number of words to return (syntax is `attributeName:nbWords`). Attributes are separated by a comma (Example: `attributesToSnippet=name:10,content:10`). You can also use a JSON string array encoding (Example: `attributesToSnippet: ["name:10","content:10"]`) By default no snippet is computed.
+ * **attributesToSnippet**: a string that contains the list of attributes to snippet alongside the number of words to return (syntax is `attributeName:nbWords`). Attributes are separated by a comma (Example: `attributesToSnippet=name:10,content:10`). <br/>You can also use a string array encoding (Example: `attributesToSnippet: ["name:10","content:10"]`) By default no snippet is computed.
  * **minWordSizefor1Typo**: the minimum number of characters in a query word to accept one typo in this word.<br/>Defaults to 3.
  * **minWordSizefor2Typos**: the minimum number of characters in a query word to accept two typos in this word.<br/>Defaults to 7.
  * **getRankingInfo**: if set to 1, the result hits will contain ranking information in **_rankingInfo** attribute.
@@ -256,24 +256,29 @@ You can retrieve all settings using the `settings` argument. The result will con
  * **minWordSizefor1Typo**: (integer) the minimum number of characters to accept one typo (default = 3).
  * **minWordSizefor2Typos**: (integer) the minimum number of characters to accept two typos (default = 7).
  * **hitsPerPage**: (integer) the number of hits per page (default = 10).
- * **attributesToRetrieve**: (array of strings) default list of attributes to retrieve in objects.
- * **attributesToHighlight**: (array of strings) default list of attributes to highlight.
- * **attributesToSnippet**: (array of strings) default list of attributes to snippet alongside the number of words to return (syntax is 'attributeName:nbWords')<br/>By default no snippet is computed.
- * **attributesToIndex**: (array of strings) the list of fields you want to index.<br/>By default all textual and numerical attributes of your objects are indexed, but you should update it to get optimal results.<br/>This parameter has two important uses:
+ * **attributesToRetrieve**: (array of strings) default list of attributes to retrieve in objects. If set to null, all attributes are retrieved.
+ * **attributesToHighlight**: (array of strings) default list of attributes to highlight. If set to null, all indexed attributes are highlighted.
+ * **attributesToSnippet**: (array of strings) default list of attributes to snippet alongside the number of words to return (syntax is 'attributeName:nbWords')<br/>By default no snippet is computed. If set to null, no snippet is computed.
+ * **attributesToIndex**: (array of strings) the list of fields you want to index.<br/>If set to null, all textual and numerical attributes of your objects are indexed, but you should update it to get optimal results.<br/>This parameter has two important uses:
   * *Limit the attributes to index*.<br/>For example if you store a binary image in base64, you want to store it and be able to retrieve it but you don't want to search in the base64 string.
-  * *Control part of the ranking*.<br/>Matches in attributes at the beginning of the list will be considered more important than matches in attributes further down the list. In one attribute, matching text at the beginning of the attribute will be considered more important than text after, you can disable this behavior if you add your attribute inside `unordered(AttributeName)`, for example `attributesToIndex:["title", "unordered(text)"]`.
- * **ranking**: (array of strings) controls the way results are sorted.<br/>We have four available criteria: 
+  * *Control part of the ranking*.<br/>(see the ranking parameter for full explanation) Matches in attributes at the beginning of the list will be considered more important than matches in attributes further down the list. In one attribute, matching text at the beginning of the attribute will be considered more important than text after, you can disable this behavior if you add your attribute inside `unordered(AttributeName)`, for example `attributesToIndex: ["title", "unordered(text)"]`.
+ * **attributesForFaceting**: (array of strings) The list of fields you want to use for faceting. All strings in the attribute selected for faceting are extracted and added as a facet. If set to null, no attribute is used for faceting.
+ * **ranking**: (array of strings) controls the way results are sorted.<br/>We have six available criteria: 
   * **typo**: sort according to number of typos,
   * **geo**: sort according to decreassing distance when performing a geo-location based search,
-  * **position**: sort according to the proximity of query words in the object,
+  * **proximity**: sort according to the proximity of query words in hits,
+  * **attribute**: sort according to the order of attributes defined by attributesToIndex,
   * **exact**: sort according to the number of words that are matched identical to query word (and not as a prefix),
-  * **custom**: sort according to a user defined formula set in **customRanking** attribute.<br/>The standard order is ["typo", "geo", position", "exact", "custom"]
- * **queryType**: select how the query words are interpreted:
+  * **custom**: sort according to a user defined formula set in **customRanking** attribute.<br/>The standard order is ["typo", "geo", "proximity", "attribute", "exact", "custom"]
+ * **customRanking**: (array of strings) lets you specify part of the ranking.<br/>The syntax of this condition is an array of strings containing attributes prefixed by asc (ascending order) or desc (descending order) operator.
+For example `"customRanking" => ["desc(population)", "asc(name)"]`  
+ * **queryType**: Select how the query words are interpreted, it can be one of the following value:
   * **prefixAll**: all query words are interpreted as prefixes,
   * **prefixLast**: only the last word is interpreted as a prefix (default behavior),
   * **prefixNone**: no query word is interpreted as a prefix. This option is not recommended.
- * **customRanking**: (array of strings) lets you specify part of the ranking.<br/>The syntax of this condition is an array of strings containing attributes prefixed by asc (ascending order) or desc (descending order) operator.
-For example `"customRanking" => ["desc(population)", "asc(name)"]`
+ * **highlightPreTag**: (string) Specify the string that is inserted before the highlighted parts in the query result (default to "&lt;em&gt;").
+ * **highlightPostTag**: (string) Specify the string that is inserted after the highlighted parts in the query result (default to "&lt;/em&gt;").
+ * **optionalWords**: (array of strings) Specify a list of words that should be considered as optional when found in the query.
 
 You can easily retrieve settings or update them:
 
