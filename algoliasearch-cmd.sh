@@ -15,6 +15,8 @@ usage() {
     echo "      $0 retrieve INDEXNAME [args]"
     echo "  Delete an index"
     echo "      $0 deleteIndex INDEXNAME"
+    echo "  Clear an index"
+    echo "      $0 clearIndex INDEXNAME"
     echo ""
     echo "  Add an object:"
     echo "      $0 add INDEXNAME OBJECT_FILENAME [objectID]"
@@ -136,6 +138,13 @@ case $1 in
             usage
         fi
         curl "${headers[@]}" --request DELETE "$ALGOLIA_HOSTNAME/1/indexes/$2"
+        echo
+        ;;
+    clearIndex)
+        if [ -z "$2" ]; then
+            usage
+        fi
+        curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/clear"
         echo
         ;;
     changeSettings)
