@@ -335,12 +335,18 @@ algoliasearch-cmd.sh addACL acl.json
 # Creates a new API key that can only perform search action on this index
 algoliasearch-cmd.sh addIndexACL acl.json
 ```
+You can also create an API Key with advanced restrictions:
+Add a validity period: the key will be valid only for a specific period of time (in seconds),
+Specify the maximum number of API calls allowed from an IP address per hour. Each time an API call is performed with this key, a check is performed. If the IP at the origin of the call did more than this number of calls in the last hour, a 403 code is returned. Defaults to 0 (no rate limit). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
+Specify the maximum number of hits this API key can retrieve in one call. Defaults to 0 (unlimited). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
+
 You can also create a temporary API key that will be valid only for a specific period of time (in seconds):
 ```sh
 # Creates a new global API key that is valid for 300 seconds
 echo '{"acl": ["search"], "validity": 300}' > acl.json
 algoliasearch-cmd.sh addACL acl.json
-# Creates a new index specific API key valid for 300 seconds
+# Creates a new index specific API key valid for 300 seconds, with a rate limit of 100 calls per hour per IP and a maximum of 20 hits
+echo '{"acl": ["search"], "validity": 300, "maxQueriesPerIPPerHour": 100, "maxHitsPerQuery": 20}' > acl.json
 algoliasearch-cmd.sh addIndexACL acl.json
 ```
 
