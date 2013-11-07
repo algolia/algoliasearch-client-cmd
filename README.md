@@ -1,8 +1,19 @@
 Algolia Search Command Line API Client
 ==================
 
+Algolia Search is a search API that provides hosted full-text, numerical and faceted search.
+Algolia’s Search API makes it easy to deliver a great search experience in your apps & websites providing:
+
+ * REST and JSON-based API
+ * search among infinite attributes from a single searchbox
+ * instant-search after each keystroke
+ * relevance & popularity combination
+ * typo-tolerance in any language
+ * faceting
+ * 99.99% SLA
+ * first-class data security
+
 This command line API Client is a small wrapper around CURL to easily expose our API.
-The service is currently in Beta, you can request an invite on our [website](http://www.algolia.com/pricing/).
 
 Table of Content
 -------------
