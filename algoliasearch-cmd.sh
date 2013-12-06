@@ -12,7 +12,7 @@ usage() {
     echo "  Query an index: "
     echo "      $0 query INDEXNAME QUERY [args]"
     echo "  Retrieve objects from the index:"
-    echo "      $0 retrieve INDEXNAME [args]"
+    echo "      $0 retrieve INDEXNAME OBJECTID"
     echo "  Delete an index"
     echo "      $0 deleteIndex INDEXNAME"
     echo "  Clear an index"
@@ -288,11 +288,10 @@ case $1 in
         if [ -z "$2" ]; then
             usage
         fi
-        if [ -n "$3" ]; then
-            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?$3"
-        else
-            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2"
+        if [ -z "$3" ]; then
+            usage
         fi
+        curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?$3"
         echo
         ;;
     query)
@@ -306,6 +305,17 @@ case $1 in
             curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?query=$3&$4"
         else
             curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/?query=$3"
+        fi
+        echo
+        ;;
+    browse)
+        if [ -z "$2" ]; then
+            usage
+        fi
+        if [ -n "$3" ]; then
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/browse?$3"
+        else
+            curl "${headers[@]}" --request GET "$ALGOLIA_HOSTNAME/1/indexes/$2/browse"
         fi
         echo
         ;;
