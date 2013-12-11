@@ -370,7 +370,7 @@ Example of API Key creation:
 echo '{"acl": ["search"]}' > acl.json
 algoliasearch-cmd.sh addACL acl.json
 # Creates a new API key that can only perform search action on this index
-algoliasearch-cmd.sh addIndexACL acl.json
+algoliasearch-cmd.sh addIndexACL indexName acl.json
 ```
 You can also create an API Key with advanced restrictions:
 Add a validity period: the key will be valid only for a specific period of time (in seconds),
@@ -384,7 +384,7 @@ echo '{"acl": ["search"], "validity": 300}' > acl.json
 algoliasearch-cmd.sh addACL acl.json
 # Creates a new index specific API key valid for 300 seconds, with a rate limit of 100 calls per hour per IP and a maximum of 20 hits
 echo '{"acl": ["search"], "validity": 300, "maxQueriesPerIPPerHour": 100, "maxHitsPerQuery": 20}' > acl.json
-algoliasearch-cmd.sh addIndexACL acl.json
+algoliasearch-cmd.sh addIndexACL indexName acl.json
 ```
 
 Get the rights of a given key:
