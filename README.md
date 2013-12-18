@@ -47,8 +47,8 @@ To setup the command line client,
  2. Open `algoliasearch-cmd.sh` and change `API_KEY` and `APPLICATION_ID` with the values you can find in [your Algolia account](http://www.algolia.com/users/edit).
 
 ```sh
-API_KEY="YourAPIKey"
 APPLICATION_ID="YourApplicationID"
+API_KEY="YourAPIKey"
 ```
 
 Quick Start
@@ -77,12 +77,12 @@ You can then start to search for a contact firstname, lastname, company, ... (ev
 Settings can be customized to tune the search behavior. For example you can add a custom sort by number of followers to the already good out-of-the-box relevance:
 ```sh
 echo '{"customRanking": ["desc(followers)"]}' > settings-contacts-1.json
-./algoliasearch-cmd.sh changeSettings contacts settings-contacts-1.json
+./algoliasearch-cmd.sh setSettings contacts settings-contacts-1.json
 ```
 You can also configure the list of attributes you want to index by order of importance (first = most important):
 ```sh
 echo '{"attributesToIndex": ["lastname", "firstname", "company"]}' > settings-contacts-2.json
-./algoliasearch-cmd.sh changeSettings contacts settings-contacts-2.json
+./algoliasearch-cmd.sh setSettings contacts settings-contacts-2.json
 ```
 
 Since the engine is designed to suggest results as you type, you'll generally search by prefix. In this case the order of attributes is very important to decide which hit is the best:
@@ -198,14 +198,14 @@ Example with automatic `objectID` assignement:
 
 ```sh
 echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh add contacts city.json
+algoliasearch-cmd.sh addObject contacts city.json
 ```
 
 Example with manual `objectID` assignement:
 
 ```javascript
 echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh add contacts city.json myID
+algoliasearch-cmd.sh addObject contacts city.json myID
 ```
 
 
@@ -238,13 +238,13 @@ You can easily retrieve an object using its `objectID` and optionnaly a list of 
 
 Retrieve all attributes:
 ```sh
-algoliasearch-cmd.sh get contacts myID
+algoliasearch-cmd.sh getObject contacts myID
 ```
 
 Retrieve firstname and lastnae attributes of `myID` object and then only the firstname attribute:
 ```sh
-algoliasearch-cmd.sh get contacts myID "attributes=firstname,lastname"
-algoliasearch-cmd.sh get contacts myID "attributes=firstname"
+algoliasearch-cmd.sh getObject contacts myID "attributes=firstname,lastname"
+algoliasearch-cmd.sh getObject contacts myID "attributes=firstname"
 ```
 
 Delete an object
@@ -301,7 +301,7 @@ algoliasearch-cmd.sh getSettings contacts
 
 ```sh
 echo '{"customRanking": ["desc(followers)"]}' > rankingSetting.json
-algoliasearch-cmd.sh changeSettings contacts rankingSetting.json
+algoliasearch-cmd.sh setSettings contacts rankingSetting.json
 ```
 
 List indexes
