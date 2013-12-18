@@ -197,15 +197,15 @@ Objects are schema less, you don't need any configuration to start indexing. The
 Example with automatic `objectID` assignement:
 
 ```sh
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh addObject contacts city.json
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json
 ```
 
 Example with manual `objectID` assignement:
 
 ```javascript
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh addObject contacts city.json myID
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json myID
 ```
 
 
