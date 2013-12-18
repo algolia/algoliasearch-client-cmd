@@ -38,6 +38,7 @@ Table of Content
 1. [Copy or rename an index](#copy-or-rename-an-index)
 1. [Backup / Retrieve all index content](#backup--retrieve-all-index-content)
 1. [Logs](#logs)
+1. [MongoDB](#mongodb)
 
 Setup
 -------------
@@ -470,3 +471,15 @@ algoliasearch-cmd.sh logs
 # Get last 100 log entries
 algoliasearch-cmd.sh logs "length=100"
 ```
+
+MongoDB
+-------
+
+You can use the `mongodb/crawler` tool to export a MongoDB collection and add all items to an Algolia index. This script is based on `mongoexport` and `algoliasearch-client-cmd`.
+
+For example, to export the collection `users` of your `myapp` database running on the default port and localhost to a `users` index, use:
+
+```sh
+./mongodb/crawler -d myapp -c users --applicationID YourApplicationID --apiKey YourAPIKey --index users
+```
+  
