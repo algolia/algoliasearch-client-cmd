@@ -208,6 +208,14 @@ echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
 algoliasearch-cmd.sh addObject contacts contact.json myID
 ```
 
+To add several JSON objects in the index, you can use the `addObjects` command:
+
+```javascript
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contacts.json
+echo '{"firstname": "Jimmie2", "lastname": "Barninger2"}' >> contacts.json
+echo '{"firstname": "Jimmie3", "lastname": "Barninger3"}' >> contacts.json
+algoliasearch-cmd.sh addObjects contacts contacts.json
+```
 
 Update an existing object in the Index
 -------------
