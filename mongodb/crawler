@@ -70,5 +70,7 @@ case $(uname) in
 esac
 
 $MONGOEXPORT ${MONGOEXPORT_ARGS[@]} | while read json; do
-  echo "$json" | sed $SED_EXTENDED_REGEXP_FLAG "s/\\\"$OBJECT_ID\\\" : (\\\"[^\\\"]*\\\"|[0-9]+)/\\\"$OBJECT_ID\\\" : \1, \\\"objectID\\\" : \1/"
+  echo "$json" | \
+    sed $SED_EXTENDED_REGEXP_FLAG "s/\\\"$OBJECT_ID\\\" : (\\\"[^\\\"]*\\\"|[0-9]+)/\\\"$OBJECT_ID\\\" : \1, \\\"objectID\\\" : \1/" | \
+    sed $SED_EXTENDED_REGEXP_FLAG 's/\{ "\$date" : ([0-9]+) \}/\1/'
 done | APPLICATION_ID="$APPLICATION_ID" API_KEY="$API_KEY" `dirname $CMD`/../algoliasearch-cmd.sh addObjects "$INDEX" /dev/stdin $BATCH_SIZE
