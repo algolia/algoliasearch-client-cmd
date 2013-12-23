@@ -1,0 +1,76 @@
+#! /bin/bash
+
+CMD=$0
+ARGV=("$@");
+ARGC=${#ARGV[@]}
+
+usage() {
+  echo "This tool allows you to export your MongoDB collection and add all items to an Algolia index."
+  echo "It's based on 'mongoexport' and 'algoliasearch-client-cmd'."
+  echo ""
+  echo "Usage:" >&2
+  echo "  $CMD [mongoexport arguments] --applicationID YourApplicationID --apiKey YourApiKey --index IndexName [--objectID attributeName] [--batchSize N]" >&2
+  echo >&2
+  echo "  Example:" >&2
+  echo "    To export the collection 'users' of your 'myapp' database running on the default port and localhost to a 'users' index, use:" >&2
+  echo "    $CMD -d myapp -c users --applicationID YourApplicationID --apiKey YourAPIKey --index users" >&2
+  exit 1
+}
+
+if [ $# -le 6 ]; then
+  usage
+fi
+
+MONGOEXPORT=`which mongoexport`
+if [ $? -ne 0 ]; then
+  echo "Error: cannot find the 'mongoexport' tool, please install it first."
+  exit 2
+fi
+
+BATCH_SIZE=1000
+
+MONGOEXPORT_ARGS=()
+for ((i = 0; i < $ARGC; i++)); do
+  case "${ARGV[$i]}" in
+    "--applicationID")
+      i=$((i + 1))
+      APPLICATION_ID="${ARGV[$i]}"
+      ;;
+    "--apiKey")
+      i=$((i + 1))
+      API_KEY="${ARGV[$i]}"
+      ;;
+    "--index")
+      i=$((i + 1))
+      INDEX="${ARGV[$i]}"
+      ;;
+    "--objectID")
+      i=$((i + 1))
+      OBJECT_ID="${ARGV[$i]}"
+      ;;
+    "--batchSize")
+      i=$((i + 1))
+      BATCH_SIZE=${ARGV[$i]}
+      ;;
+    *)
+      MONGOEXPORT_ARGS+=(${ARGV[$i]})
+      ;;
+  esac
+done
+
+echo "Export command:    $MONGOEXPORT ${MONGOEXPORT_ARGS[@]}"
+echo "Destination index: $INDEX"
+echo "Object ID:         $OBJECT_ID"
+echo
+
+SED_EXTENDED_REGEXP_FLAG=-r
+case $(uname) in
+  *BSD) SED_EXTENDED_REGEXP_FLAG=-E ;;
+   Darwin) SED_EXTENDED_REGEXP_FLAG=-E ;;
+esac
+
+$MONGOEXPORT ${MONGOEXPORT_ARGS[@]} | while read json; do
+  echo "$json" | \
+    sed $SED_EXTENDED_REGEXP_FLAG "s/\\\"$OBJECT_ID\\\" : (\\\"[^\\\"]*\\\"|[0-9]+)/\\\"$OBJECT_ID\\\" : \1, \\\"objectID\\\" : \1/" | \
+    sed $SED_EXTENDED_REGEXP_FLAG 's/\{ "\$date" : ([0-9]+) \}/\1/'
+done | APPLICATION_ID="$APPLICATION_ID" API_KEY="$API_KEY" `dirname $CMD`/../algoliasearch-cmd.sh addObjects "$INDEX" /dev/stdin $BATCH_SIZE

@@ -38,6 +38,7 @@ Table of Content
 1. [Copy or rename an index](#copy-or-rename-an-index)
 1. [Backup / Retrieve all index content](#backup--retrieve-all-index-content)
 1. [Logs](#logs)
+1. [MongoDB](#mongodb)
 
 Setup
 -------------
@@ -47,8 +48,8 @@ To setup the command line client,
  2. Open `algoliasearch-cmd.sh` and change `API_KEY` and `APPLICATION_ID` with the values you can find in [your Algolia account](http://www.algolia.com/users/edit).
 
 ```sh
-API_KEY="YourAPIKey"
 APPLICATION_ID="YourApplicationID"
+API_KEY="YourAPIKey"
 ```
 
 Quick Start
@@ -77,12 +78,12 @@ You can then start to search for a contact firstname, lastname, company, ... (ev
 Settings can be customized to tune the search behavior. For example you can add a custom sort by number of followers to the already good out-of-the-box relevance:
 ```sh
 echo '{"customRanking": ["desc(followers)"]}' > settings-contacts-1.json
-./algoliasearch-cmd.sh changeSettings contacts settings-contacts-1.json
+./algoliasearch-cmd.sh setSettings contacts settings-contacts-1.json
 ```
 You can also configure the list of attributes you want to index by order of importance (first = most important):
 ```sh
 echo '{"attributesToIndex": ["lastname", "firstname", "company"]}' > settings-contacts-2.json
-./algoliasearch-cmd.sh changeSettings contacts settings-contacts-2.json
+./algoliasearch-cmd.sh setSettings contacts settings-contacts-2.json
 ```
 
 Since the engine is designed to suggest results as you type, you'll generally search by prefix. In this case the order of attributes is very important to decide which hit is the best:
@@ -200,17 +201,25 @@ Objects are schema less, you don't need any configuration to start indexing. The
 Example with automatic `objectID` assignement:
 
 ```sh
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh add contacts city.json
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json
 ```
 
 Example with manual `objectID` assignement:
 
 ```javascript
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > city.json
-algoliasearch-cmd.sh add contacts city.json myID
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json myID
 ```
 
+To add several JSON objects in the index, you can use the `addObjects` command:
+
+```javascript
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contacts.json
+echo '{"firstname": "Jimmie2", "lastname": "Barninger2"}' >> contacts.json
+echo '{"firstname": "Jimmie3", "lastname": "Barninger3"}' >> contacts.json
+algoliasearch-cmd.sh addObjects contacts contacts.json
+```
 
 Update an existing object in the Index
 -------------
@@ -241,13 +250,13 @@ You can easily retrieve an object using its `objectID` and optionnaly a list of 
 
 Retrieve all attributes:
 ```sh
-algoliasearch-cmd.sh get contacts myID
+algoliasearch-cmd.sh getObject contacts myID
 ```
 
 Retrieve firstname and lastnae attributes of `myID` object and then only the firstname attribute:
 ```sh
-algoliasearch-cmd.sh get contacts myID "attributes=firstname,lastname"
-algoliasearch-cmd.sh get contacts myID "attributes=firstname"
+algoliasearch-cmd.sh getObject contacts myID "attributes=firstname,lastname"
+algoliasearch-cmd.sh getObject contacts myID "attributes=firstname"
 ```
 
 Delete an object
@@ -305,7 +314,7 @@ algoliasearch-cmd.sh getSettings contacts
 
 ```sh
 echo '{"customRanking": ["desc(followers)"]}' > rankingSetting.json
-algoliasearch-cmd.sh changeSettings contacts rankingSetting.json
+algoliasearch-cmd.sh setSettings contacts rankingSetting.json
 ```
 
 List indexes
@@ -466,3 +475,15 @@ algoliasearch-cmd.sh logs
 # Get last 100 log entries
 algoliasearch-cmd.sh logs "length=100"
 ```
+
+MongoDB
+-------
+
+You can use the `mongodb/crawler` tool to export a MongoDB collection and add all items to an Algolia index. This script is based on `mongoexport` and `algoliasearch-client-cmd`.
+
+For example, to export the collection `users` of your `myapp` database running on the default port and localhost to a `users` index, use:
+
+```sh
+./mongodb/crawler -d myapp -c users --applicationID YourApplicationID --apiKey YourAPIKey --index users
+```
+  

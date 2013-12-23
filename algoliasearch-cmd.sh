@@ -1,6 +1,9 @@
-#!/bin/bash
-API_KEY="YourAPIKey"
-APPLICATION_ID="YourApplicationID"
+#! /bin/bash
+
+# uncomment the following lines to set your Application ID and API Key
+# APPLICATION_ID=YourApplicationID
+# API_KEY=YourApiKey
+
 HOST="$APPLICATION_ID.algolia.io"
 GZIP=0
 VERBOSE=0
@@ -19,9 +22,11 @@ usage() {
     echo "      $0 clearIndex INDEXNAME"
     echo ""
     echo "  Add an object:"
-    echo "      $0 add INDEXNAME OBJECT_FILENAME [objectID]"
+    echo "      $0 addObject INDEXNAME OBJECT_FILENAME [objectID]"
+    echo "  Add objects from a file, reading 1 JSON object per line:"
+    echo "      $0 addObjects INDEXNAME OBJECTS_FILENAME [batchSize]"
     echo "  Get an object from the index:"
-    echo "      $0 get INDEXNAME OBJECTID [args]"
+    echo "      $0 getObject INDEXNAME OBJECTID [args]"
     echo "  Replace an object in the index:"
     echo "      $0 replace INDEXNAME OBJECTID OBJECT_FILENAME [args]"
     echo "  Delete an objet in the index:"
@@ -36,7 +41,7 @@ usage() {
     echo "  Get settings"
     echo "      $0 getSettings INDEXNAME"
     echo "  Set settings"
-    echo "      $0 changeSettings INDEXNAME SETTING_FILENAME"
+    echo "      $0 setSettings INDEXNAME SETTING_FILENAME"
     echo "  Get Task info"
     echo "      $0 task INDEXNAME TASKID"
     echo ""
@@ -65,6 +70,18 @@ usage() {
     echo "      $0 logs [args]"
     exit 1;
 }
+
+if [ -z "$APPLICATION_ID" ]; then
+    echo "Error: Please set your APPLICATION_ID"
+    echo
+    usage
+fi 
+if [ -z "$API_KEY" ]; then
+    echo "Error: Please set your API_KEY"
+    echo
+    usage
+fi 
+
 headers=(--header "Content-Type: application/json; charset=utf-8")
 if [ "x$ALGOLIA_API_KEY" = "x" ]; then
   headers+=(--header "X-Algolia-API-Key: $API_KEY")
@@ -147,7 +164,7 @@ case $1 in
         curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/clear"
         echo
         ;;
-    changeSettings)
+    setSettings|changeSettings)
         if [ -z "$2" ]; then
             usage
         fi
@@ -256,7 +273,7 @@ case $1 in
         curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2/$3/partial" --data-binary @$4
         echo
         ;;
-    get)
+    get|getObject)
         if [ -z "$2" ]; then
             usage
         fi
@@ -270,7 +287,7 @@ case $1 in
         fi
         echo
         ;;
-    add)
+    add|addObject)
         if [ -z "$2" ]; then
             usage
         fi
@@ -282,6 +299,48 @@ case $1 in
         else
             curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$2" --data-binary @$3
         fi
+        echo
+        ;;
+    addObjects)
+        if [ -z "$2" ]; then
+            usage
+        fi
+        if [ -z "$3" ]; then
+            usage
+        fi
+        BATCH_SIZE=1000
+        if [ -n "$4" ]; then
+            BATCH_SIZE=$4
+        fi
+        BATCH=()
+        INDEX=$2
+        push() {
+            local len=${#BATCH[@]}
+            if [ $len -eq 0 ]; then
+              return;
+            fi
+            echo '{ "requests" : [' > algolia_batch.json
+            for ((i = 0; i < $len; i++)); do
+              echo '{ "action" : "addObject", "body" : ' >> algolia_batch.json
+              echo "${BATCH[$i]}" >> algolia_batch.json
+              echo '}' >> algolia_batch.json
+              if [ $i -lt $((len - 1)) ]; then
+                echo ',' >> algolia_batch.json
+              fi
+            done
+            echo '] }' >> algolia_batch.json
+            curl "${headers[@]}" --request POST "$ALGOLIA_HOSTNAME/1/indexes/$INDEX/batch" --data-binary @algolia_batch.json
+            rm algolia_batch.json
+        }
+
+        while read object; do
+            BATCH+=("$object")
+            if [ ${#BATCH[@]} -eq $BATCH_SIZE ]; then
+                push
+                BATCH=()
+            fi
+        done < "$3"
+        push
         echo
         ;;
     retrieve)
