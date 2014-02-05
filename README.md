@@ -1,6 +1,10 @@
 Algolia Search Command Line API Client
 ==================
 
+
+
+
+
 [Algolia Search](http://www.algolia.com) is a search API that provides hosted full-text, numerical and faceted search.
 Algolia’s Search API makes it easy to deliver a great search experience in your apps & websites providing:
 
@@ -13,36 +17,48 @@ Algolia’s Search API makes it easy to deliver a great search experience in you
  * 99.99% SLA
  * first-class data security
 
-This command line API Client is a small wrapper around CURL to easily expose our API.
+This command line API Client is a small wrapper around CURL to easily use Algolia Search's REST API.
+
+
+
+
 
 Table of Content
 -------------
 **Get started**
 
-1. [Setup](#setup) 
+1. [Setup](#setup)
 1. [Quick Start](#quick-start)
+1. [Online documentation](#online-documentation)
 
 **Commands reference**
 
-1. [Search](#search)
 1. [Add a new object](#add-a-new-object-in-the-index)
 1. [Update an object](#update-an-existing-object-in-the-index)
+1. [Search](#search)
 1. [Get an object](#get-an-object)
-1. [List indexes](#list-indexes)
 1. [Delete an object](#delete-an-object)
 1. [Index settings](#index-settings)
+1. [List indexes](#list-indexes)
 1. [Delete an index](#delete-an-index)
 1. [Clear an index](#clear-an-index)
+1. [Wait indexing](#wait-indexing)
 1. [Batch writes](#batch-writes)
 1. [Security / User API Keys](#security--user-api-keys)
 1. [Copy or rename an index](#copy-or-rename-an-index)
 1. [Backup / Retrieve all index content](#backup--retrieve-all-index-content)
 1. [Logs](#logs)
-1. [MongoDB](#mongodb)
+
+
+
+
 
 Setup
 -------------
-To setup the command line client,
+To setup the command line client, follow these steps:
+
+
+
 
  1. Download the [client](https://github.com/algolia/algoliasearch-client-cmd/archive/master.zip)
  2. Open `algoliasearch-cmd.sh` and change `API_KEY` and `APPLICATION_ID` with the values you can find in [your Algolia account](http://www.algolia.com/users/edit).
@@ -52,34 +68,30 @@ APPLICATION_ID="YourApplicationID"
 API_KEY="YourAPIKey"
 ```
 
+
+
 Quick Start
 -------------
+
 This quick start is a 30 seconds tutorial where you can discover how to index and search objects.
 
+```sh
+./algoliasearch-cmd.sh batch contacts contacts.json
+```
 
+You can then start to search for a contact firstname, lastname, company, ... (even with typos):
 Without any prior-configuration, you can index [500 contacts](https://github.com/algolia/algoliasearch-client-cmd/blob/master/contacts.json) in the ```contacts``` index with the following code:
 ```sh
 ./algoliasearch-cmd.sh batch contacts contacts.json
 ```
 The contacts.json file is formated in our [batch format](http://www.algolia.com/doc/rest_api#Batch). The ```body```attribute contains the user-object that can be any valid JSON.
 
-You can then start to search for a contact firstname, lastname, company, ... (even with typos):
-```sh
-# search by firstname
-./algoliasearch-cmd.sh query contacts "jimmie"
-# search a firstname with typo
-./algoliasearch-cmd.sh query contacts "jimie"
-# search for a company
-./algoliasearch-cmd.sh query contacts "california paint"
-# search for a firstname & company
-./algoliasearch-cmd.sh query contacts "jimmie paint"
-```
-
 Settings can be customized to tune the search behavior. For example you can add a custom sort by number of followers to the already good out-of-the-box relevance:
 ```sh
 echo '{"customRanking": ["desc(followers)"]}' > settings-contacts-1.json
 ./algoliasearch-cmd.sh setSettings contacts settings-contacts-1.json
 ```
+
 You can also configure the list of attributes you want to index by order of importance (first = most important):
 ```sh
 echo '{"attributesToIndex": ["lastname", "firstname", "company"]}' > settings-contacts-2.json
@@ -92,15 +104,87 @@ Since the engine is designed to suggest results as you type, you'll generally se
 ./algoliasearch-cmd.sh query contacts "jim"
 ```
 
-Search
--------------
-To perform a search, you have just to specify the index name and the query. 
 
-This example perform the query `query string" on `contacts` index:
+
+
+Online Documentation
+----------------
+
+Check our [online documentation](http://www.algolia.com/doc):
+ * [Initial Import](http://www.algolia.com/doc#InitialImport)
+ * [Ranking &amp; Relevance](http://www.algolia.com/doc#RankingRelevance)
+ * [Settings](http://www.algolia.com/doc#Settings)
+ * [Search](http://www.algolia.com/doc#Search)
+ * [Incremental Updates](http://www.algolia.com/doc#IncrementalUpdates)
+ * [Reindexing](http://www.algolia.com/doc#Reindexing)
+ * [Numeric-Search](http://www.algolia.com/doc#Numeric-Search)
+ * [Category-Search](http://www.algolia.com/doc#Category-Search)
+ * [Faceting](http://www.algolia.com/doc#Faceting)
+ * [Geo-Search](http://www.algolia.com/doc#Geo-Search)
+ * [Security](http://www.algolia.com/doc#Security)
+ * [Indexing Several Types](http://www.algolia.com/doc#IndexingSeveralTypes)
+ * [REST API](http://www.algolia.com/doc/rest)
+
+
+
+
+
+
+
+Add a new object in the Index
+-------------
+
+Each entry in an index has a unique identifier called `objectID`. You have two ways to add en entry in the index:
+
+ 1. Using automatic `objectID` assignement, you will be able to retrieve it in the answer.
+ 2. Passing your own `objectID`
+
+You don't need to explicitely create an index, it will be automatically created the first time you add an object.
+Objects are schema less, you don't need any configuration to start indexing. The settings section provide details about advanced settings.
+
+Example with automatic `objectID` assignement:
 
 ```sh
-algoliasearch-cmd.sh query contacts "query string"
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json
 ```
+
+Example with manual `objectID` assignement:
+
+```javascript
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json myID
+```
+
+Update an existing object in the Index
+-------------
+
+You have two options to update an existing object:
+
+ 1. Replace all its attributes.
+ 2. Replace only some attributes.
+
+Example to replace all the content of an existing object:
+
+```sh
+echo '{"firstname": "Jimmie", "lastname": "Barninger", "city":"New York"}' > city.json
+algoliasearch-cmd.sh replace contacts myID ./city.json
+```
+
+Example to update only the city attribute of an existing object:
+
+```javascript
+echo '{"city": "San Francisco"}' > city.json
+algoliasearch-cmd.sh partialUpdate contacts myID ./city.json
+```
+
+Search
+-------------
+
+
+To perform a search, you have just to specify the index name and the query.
+
+You can use the following optional arguments:
 
 ### Query parameters
 
@@ -126,6 +210,7 @@ algoliasearch-cmd.sh query contacts "query string"
  * **insideBoundingBox**: search entries inside a given area defined by the two extreme points of a rectangle (defined by 4 floats: p1Lat,p1Lng,p2Lat,p2Lng).<br/>For example `insideBoundingBox=47.3165,4.9665,47.3424,5.0201`).<br/>At indexing, you should specify geoloc of an object with the _geoloc attribute (in the form `{"_geoloc":{"lat":48.853409, "lng":2.348800}}`)
 
 #### Parameters to control results content
+
  * **attributesToRetrieve**: a string that contains the list of object attributes you want to retrieve (let you minimize the answer size).<br/> Attributes are separated with a comma (for example `"name,address"`), you can also use a string array encoding (for example `["name","address"]` ). By default, all attributes are retrieved. You can also use `*` to retrieve all values when an **attributesToRetrieve** setting is specified for your index.
  * **attributesToHighlight**: a string that contains the list of attributes you want to highlight according to the query. Attributes are separated by a comma. You can also use a string array encoding (for example `["name","address"]`). If an attribute has no match for the query, the raw value is returned. By default all indexed text attributes are highlighted. You can use `*` if you want to highlight all textual attributes. Numerical attributes are not highlighted. A matchLevel is returned for each highlighted attribute and can contain:
   * **full**: if all the query terms were found in the attribute,
@@ -133,6 +218,7 @@ algoliasearch-cmd.sh query contacts "query string"
   * **none**: if none of the query terms were found.
  * **attributesToSnippet**: a string that contains the list of attributes to snippet alongside the number of words to return (syntax is `attributeName:nbWords`). Attributes are separated by a comma (Example: `attributesToSnippet=name:10,content:10`). <br/>You can also use a string array encoding (Example: `attributesToSnippet: ["name:10","content:10"]`). By default no snippet is computed.
  * **getRankingInfo**: if set to 1, the result hits will contain ranking information in **_rankingInfo** attribute.
+ 
 
 #### Numeric search parameters
  * **numericFilters**: a string that contains the list of numeric filters you want to apply separated by a comma. The syntax of one filter is `attributeName` followed by `operand` followed by `value`. Supported operands are `<`, `<=`, `=`, `>` and `>=`. 
@@ -142,7 +228,7 @@ algoliasearch-cmd.sh query contacts "query string"
  * **tagFilters**: filter the query by a set of tags. You can AND tags by separating them by commas. To OR tags, you must add parentheses. For example, `tags=tag1,(tag2,tag3)` means *tag1 AND (tag2 OR tag3)*. You can also use a string array encoding, for example `tagFilters: ["tag1",["tag2","tag3"]]` means *tag1 AND (tag2 OR tag3)*.<br/>At indexing, tags should be added in the **_tags** attribute of objects (for example `{"_tags":["tag1","tag2"]}`). 
 
 #### Faceting parameters
- * **facetFilters**: filter the query by a list of facets. Facets are separated by commas and each facet is encoded as `attributeName:value`. For example: `facetFilters=category:Book,author:John%20Doe`. You can also use a string array encoding (for example `["category:Book","author:John%20Doe"]`).
+ * **facetFilters**: filter the query by a list of facets. Facets are separated by commas and each facet is encoded as `attributeName:value`. To OR facets, you must add parentheses. For example: `facetFilters=(category:Book,category:Movie),author:John%20Doe`. You can also use a string array encoding (for example `[["category:Book","category:Movie"],"author:John%20Doe"]`).
  * **facets**: List of object attributes that you want to use for faceting. <br/>Attributes are separated with a comma (for example `"category,author"` ). You can also use a JSON string array encoding (for example `["category","author"]` ). Only attributes that have been added in **attributesForFaceting** index setting can be used in this parameter. You can also use `*` to perform faceting on all attributes specified in **attributesForFaceting**.
 
 #### Distinct parameter
@@ -187,76 +273,13 @@ The server response will look like:
 }
 ```
 
-Add a new object in the Index
--------------
-
-Each entry in an index has a unique identifier called `objectID`. You have two ways to add en entry in the index:
-
- 1. Using automatic `objectID` assignement, you will be able to retrieve it in the answer.
- 2. Passing your own `objectID`.
-
-You don't need to explicitely create an index, it will be automatically created the first time you add an object.
-Objects are schema less, you don't need any configuration to start indexing. The settings section provide details about advanced settings.
-
-Example with automatic `objectID` assignement:
-
-```sh
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
-algoliasearch-cmd.sh addObject contacts contact.json
-```
-
-Example with manual `objectID` assignement:
-
-```javascript
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
-algoliasearch-cmd.sh addObject contacts contact.json myID
-```
-
-To add several JSON objects in the index, you can use the `addObjects` command:
-
-```javascript
-echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contacts.json
-echo '{"firstname": "Jimmie2", "lastname": "Barninger2"}' >> contacts.json
-echo '{"firstname": "Jimmie3", "lastname": "Barninger3"}' >> contacts.json
-algoliasearch-cmd.sh addObjects contacts contacts.json
-```
-
-Update an existing object in the Index
--------------
-
-You have two options to update an existing object:
-
- 1. Replace all its attributes.
- 2. Replace only some attributes.
-
-Example to replace all the content of an existing object:
-
-```sh
-echo '{"firstname": "Jimmie", "lastname": "Barninger", "city":"New York"}' > city.json
-algoliasearch-cmd.sh replace contacts myID ./city.json
-```
-
-Example to update only the city attribute of an existing object:
-
-```javascript
-echo '{"city": "San Francisco"}' > city.json
-algoliasearch-cmd.sh partialUpdate contacts myID ./city.json
-```
-
 Get an object
 -------------
 
 You can easily retrieve an object using its `objectID` and optionnaly a list of attributes you want to retrieve (using comma as separator):
 
-Retrieve all attributes:
 ```sh
 algoliasearch-cmd.sh getObject contacts myID
-```
-
-Retrieve firstname and lastnae attributes of `myID` object and then only the firstname attribute:
-```sh
-algoliasearch-cmd.sh getObject contacts myID "attributes=firstname,lastname"
-algoliasearch-cmd.sh getObject contacts myID "attributes=firstname"
 ```
 
 Delete an object
@@ -271,7 +294,8 @@ algoliasearch-cmd.sh delete contacts myID
 Index Settings
 -------------
 
-You can retrieve all settings using the `settings` argument. The result will contains the following attributes:
+You can retrieve all settings using the `settings` function. The result will contains the following attributes:
+
 
 #### Indexing parameters
  * **attributesToIndex**: (array of strings) the list of fields you want to index.<br/>If set to null, all textual and numerical attributes of your objects are indexed, but you should update it to get optimal results.<br/>This parameter has two important uses:
@@ -294,6 +318,7 @@ For example `"customRanking" => ["desc(population)", "asc(name)"]`
   * **prefixAll**: all query words are interpreted as prefixes,
   * **prefixLast**: only the last word is interpreted as a prefix (default behavior),
   * **prefixNone**: no query word is interpreted as a prefix. This option is not recommended.
+ * **slaves**: The list of indexes on which you want to replicate all write operations. In order to get response times in milliseconds, we pre-compute part of the ranking during indexing. If you want to use different ranking configurations depending of the use-case, you need to create one index per ranking configuration. This option enables you to perform write operations only on this index, and to automatically update slave indexes with the same operations.
 
 #### Default query parameters (can be overwrite by query)
  * **minWordSizefor1Typo**: (integer) the minimum number of characters to accept one typo (default = 3).
@@ -312,14 +337,9 @@ You can easily retrieve settings or update them:
 algoliasearch-cmd.sh getSettings contacts
 ```
 
-```sh
-echo '{"customRanking": ["desc(followers)"]}' > rankingSetting.json
-algoliasearch-cmd.sh setSettings contacts rankingSetting.json
-```
-
 List indexes
 -------------
-You can list all your indexes with their associated information (number of entries, disk size, etc.) with the `indexes` argument:
+You can list all your indexes with their associated information (number of entries, disk size, etc.) with the `indexes` method:
 
 ```sh
 algoliasearch-cmd.sh indexes
@@ -341,17 +361,50 @@ You can delete the index content without removing settings and index specific AP
 algoliasearch-cmd.sh clearIndex contacts
 ```
 
+Wait indexing
+-------------
+
+All write operations return a `taskID` when the job is securely stored on our infrastructure but not when the job is published in your index. Even if it's extremely fast, you can easily ensure indexing is complete using the `waitTask` method on the `taskID` returned by a write operation. 
+
+For example, to wait for indexing of a new object:
+```sh
+echo '{"firstname": "Jimmie", "lastname": "Barninger"}' > contact.json
+algoliasearch-cmd.sh addObject contacts contact.json
+# grab the taskID
+while algoliasearch-cmd.sh task contacts taskID | grep -q notPublished; do sleep 1; done
+```
+
+
+If you want to ensure multiple objects have been indexed, you can only check the biggest taskID.
+
 Batch writes
 -------------
 
-You may want to perform multiple operations with a single API call to reduce latency.
-You can format the input in our [batch format](http://docs.algoliav1.apiary.io/#post-%2F1%2Findexes%2F%7BindexName%7D%2Fbatch) and use the command line tool with the `batch` argument to send the batch.
+You may want to perform multiple operations with one API call to reduce latency.
+We expose three methods to perform batch:
+ * `addObject`: add an array of object using automatic `objectID` assignement
+ * `saveObject`: add or update an array of object that contains an `objectID` attribute
+ * `partialUpdate`: partially update an array of objects that contain an `objectID` attribute (only specified attributes will be updated, other will remain unchanged)
 
-Example:
+Example using automatic `objectID` assignement:
 ```sh
 echo '{ "requests":[{"action": "addObject", "body": { "firstname": "Jimmie", "lastname": "Barninger"} }, {"action": "addObject", "body": { "firstname": "Warren", "lastname": "Speach"} } ] }' > batch.json
 algoliasearch-cmd.sh batch contacts batch.json
 ```
+
+Example with user defined `objectID` (add or update):
+```sh
+echo '{ "requests":[{"action": "saveObject", "body": { "firstname": "Jimmie", "lastname": "Barninger"}, "objectID": "myID1" }, {"action": "saveObject", "body": { "firstname": "Warren", "lastname": "Speach" }, "objectID": "myID2" } ] }' > batch.json
+algoliasearch-cmd.sh batch contacts batch.json
+```
+
+Example that update only the `firstname` attribute:
+```sh
+echo '{ "requests":[{"action": "partialUpdateObject", "body": { "firstname": "Jimmie" }, "objectID": "myID1" }, {"action": "partialUpdateObject", "body": { "firstname": "Warren" }, "objectID": "myID2" } ] }' > batch.json
+algoliasearch-cmd.sh batch contacts batch.json
+```
+
+
 
 Security / User API Keys
 -------------
@@ -360,7 +413,6 @@ The admin API key provides full control of all your indexes.
 You can also generate user API keys to control security. 
 These API keys can be restricted to a set of operations or/and restricted to a given index.
 
-To list existing keys, you can use `listUserKeys` method:
 ```sh
 # Lists global API Keys
 algoliasearch-cmd.sh getACL
@@ -385,12 +437,14 @@ algoliasearch-cmd.sh addACL acl.json
 # Creates a new API key that can only perform search action on this index
 algoliasearch-cmd.sh addIndexACL indexName acl.json
 ```
-You can also create an API Key with advanced restrictions:
-Add a validity period: the key will be valid only for a specific period of time (in seconds),
-Specify the maximum number of API calls allowed from an IP address per hour. Each time an API call is performed with this key, a check is performed. If the IP at the origin of the call did more than this number of calls in the last hour, a 403 code is returned. Defaults to 0 (no rate limit). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
-Specify the maximum number of hits this API key can retrieve in one call. Defaults to 0 (unlimited). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
 
-You can also create a temporary API key that will be valid only for a specific period of time (in seconds):
+You can also create an API Key with advanced restrictions:
+
+ * Add a validity period: the key will be valid only for a specific period of time (in seconds),
+ * Specify the maximum number of API calls allowed from an IP address per hour. Each time an API call is performed with this key, a check is performed. If the IP at the origin of the call did more than this number of calls in the last hour, a 403 code is returned. Defaults to 0 (no rate limit). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
+
+ * Specify the maximum number of hits this API key can retrieve in one call. Defaults to 0 (unlimited). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
+
 ```sh
 # Creates a new global API key that is valid for 300 seconds
 echo '{"acl": ["search"], "validity": 300}' > acl.json
@@ -476,6 +530,10 @@ algoliasearch-cmd.sh logs
 algoliasearch-cmd.sh logs "length=100"
 ```
 
+
+
+
+
 MongoDB
 -------
 
@@ -486,4 +544,4 @@ For example, to export the collection `users` of your `myapp` database running o
 ```sh
 ./mongodb/crawler -d myapp -c users --applicationID YourApplicationID --apiKey YourAPIKey --index users
 ```
-  
+
