@@ -23,6 +23,7 @@ This command line API Client is a small wrapper around CURL to easily use Algoli
 
 
 
+
 Table of Content
 -------------
 **Get started**
@@ -178,6 +179,8 @@ echo '{"city": "San Francisco"}' > city.json
 algoliasearch-cmd.sh partialUpdate contacts myID ./city.json
 ```
 
+
+
 Search
 -------------
 
@@ -198,6 +201,9 @@ You can use the following optional arguments:
  * **optionalWords**: a string that contains the list of words that should be considered as optional when found in the query. The list of words is comma separated.
  * **minWordSizefor1Typo**: the minimum number of characters in a query word to accept one typo in this word.<br/>Defaults to 3.
  * **minWordSizefor2Typos**: the minimum number of characters in a query word to accept two typos in this word.<br/>Defaults to 7.
+ * **advancedSyntax**: Enable the advanced query syntax. Defaults to 0 (false).
+    * **Phrase query**: a phrase query defines a particular sequence of terms. A phrase query is build by Algolia's query parser for words surrounded by `"`. For example, `"search engine"` will retrieve records having `search` next to `engine` only. Typo-tolerance is _disabled_ on phrase queries.
+    * **Prohibit operator**: The prohibit operator excludes records that contain the term after the `-` symbol. For example `search -engine` will retrieve records containing `search` but not `engine`.
 
 #### Pagination parameters
 
@@ -206,7 +212,7 @@ You can use the following optional arguments:
 
 #### Geo-search parameters
 
- * **aroundLatLng**: search for entries around a given latitude/longitude (specified as two floats separated by a comma).<br/>For example `aroundLatLng=47.316669,5.016670`).<br/>You can specify the maximum distance in meters with the **aroundRadius** parameter (in meters) and the precision for ranking with **aroundPrecision** (for example if you set aroundPrecision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).<br/>At indexing, you should specify geoloc of an object with the _geoloc attribute (in the form `{"_geoloc":{"lat":48.853409, "lng":2.348800}}`)
+ * **aroundLatLng**: search for entries around a given latitude/longitude (specified as two floats separated by a comma).<br/>For example `aroundLatLng=47.316669,5.016670`).<br/>You can specify the maximum distance in meters with the **aroundRadius** parameter (in meters) and the precision for ranking with **aroundPrecision** (for example if you set aroundPrecision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).<br/>At indexing, you should specify geoloc of an object with the `_geoloc` attribute (in the form `{"_geoloc":{"lat":48.853409, "lng":2.348800}}`)
  * **insideBoundingBox**: search entries inside a given area defined by the two extreme points of a rectangle (defined by 4 floats: p1Lat,p1Lng,p2Lat,p2Lng).<br/>For example `insideBoundingBox=47.3165,4.9665,47.3424,5.0201`).<br/>At indexing, you should specify geoloc of an object with the _geoloc attribute (in the form `{"_geoloc":{"lat":48.853409, "lng":2.348800}}`)
 
 #### Parameters to control results content
@@ -222,7 +228,12 @@ You can use the following optional arguments:
 
 #### Numeric search parameters
  * **numericFilters**: a string that contains the list of numeric filters you want to apply separated by a comma. The syntax of one filter is `attributeName` followed by `operand` followed by `value`. Supported operands are `<`, `<=`, `=`, `>` and `>=`. 
- You can have multiple conditions on one attribute like for example `numericFilters=price>100,price<1000`. You can also use a string array encoding (for example `numericFilters: ["price>100","price<1000"]`).
+
+You can easily perform range queries via the `:` operator (equivalent to combining a `>=` and `<=` operand), for example `numericFilters=price:10 to 1000`.
+
+You can also mix OR and AND operators. The OR operator is defined with a parenthesis syntax. For example `(code=1 AND (price:[0-100] OR price:[1000-2000]))` translates in `encodeURIComponent("code=1,(price:0 to 10,price:1000 to 2000)")`.
+
+You can also use a string array encoding (for example `numericFilters: ["price>100","price<1000"]`).
 
 #### Category search parameters
  * **tagFilters**: filter the query by a set of tags. You can AND tags by separating them by commas. To OR tags, you must add parentheses. For example, `tags=tag1,(tag2,tag3)` means *tag1 AND (tag2 OR tag3)*. You can also use a string array encoding, for example `tagFilters: ["tag1",["tag2","tag3"]]` means *tag1 AND (tag2 OR tag3)*.<br/>At indexing, tags should be added in the **_tags** attribute of objects (for example `{"_tags":["tag1","tag2"]}`). 
@@ -230,6 +241,7 @@ You can use the following optional arguments:
 #### Faceting parameters
  * **facetFilters**: filter the query by a list of facets. Facets are separated by commas and each facet is encoded as `attributeName:value`. To OR facets, you must add parentheses. For example: `facetFilters=(category:Book,category:Movie),author:John%20Doe`. You can also use a string array encoding (for example `[["category:Book","category:Movie"],"author:John%20Doe"]`).
  * **facets**: List of object attributes that you want to use for faceting. <br/>Attributes are separated with a comma (for example `"category,author"` ). You can also use a JSON string array encoding (for example `["category","author"]` ). Only attributes that have been added in **attributesForFaceting** index setting can be used in this parameter. You can also use `*` to perform faceting on all attributes specified in **attributesForFaceting**.
+ * **maxValuesPerFacet**: Limit the number of facet values returned for each facet. For example: `maxValuesPerFacet=10` will retrieve max 10 values per facet.
 
 #### Distinct parameter
  * **distinct**: If set to 1, enable the distinct feature (disabled by default) if the `attributeForDistinct` index setting is set. This feature is similar to the SQL "distinct" keyword: when enabled in a query with the `distinct=1` parameter, all hits containing a duplicate value for the attributeForDistinct attribute are removed from results. For example, if the chosen attribute is `show_name` and several hits have the same value for `show_name`, then only the best one is kept and others are removed.
@@ -272,6 +284,10 @@ The server response will look like:
   "params": "query=jimmie+paint&attributesToRetrieve=firstname,lastname&hitsPerPage=50"
 }
 ```
+
+
+
+
 
 Get an object
 -------------
@@ -384,6 +400,7 @@ You may want to perform multiple operations with one API call to reduce latency.
 We expose three methods to perform batch:
  * `addObject`: add an array of object using automatic `objectID` assignement
  * `saveObject`: add or update an array of object that contains an `objectID` attribute
+ * `deleteObject`: delete an array of objectIDs
  * `partialUpdate`: partially update an array of objects that contain an `objectID` attribute (only specified attributes will be updated, other will remain unchanged)
 
 Example using automatic `objectID` assignement:
@@ -395,6 +412,12 @@ algoliasearch-cmd.sh batch contacts batch.json
 Example with user defined `objectID` (add or update):
 ```sh
 echo '{ "requests":[{"action": "saveObject", "body": { "firstname": "Jimmie", "lastname": "Barninger"}, "objectID": "myID1" }, {"action": "saveObject", "body": { "firstname": "Warren", "lastname": "Speach" }, "objectID": "myID2" } ] }' > batch.json
+algoliasearch-cmd.sh batch contacts batch.json
+```
+
+Example that delete a set of records:
+```sh
+echo '{ "requests":[{"action": "deleteObject", "body": { "objectID": "myID1" }, {"action": "deleteObject", "body": { "objectID": "myID2" } ] }' > batch.json
 algoliasearch-cmd.sh batch contacts batch.json
 ```
 
@@ -444,6 +467,7 @@ You can also create an API Key with advanced restrictions:
  * Specify the maximum number of API calls allowed from an IP address per hour. Each time an API call is performed with this key, a check is performed. If the IP at the origin of the call did more than this number of calls in the last hour, a 403 code is returned. Defaults to 0 (no rate limit). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
 
  * Specify the maximum number of hits this API key can retrieve in one call. Defaults to 0 (unlimited). This parameter can be used to protect you from attempts at retrieving your entire content by massively querying the index.
+ * Specify the list of targeted indexes. Defaults to all indexes if empty of blank.
 
 ```sh
 # Creates a new global API key that is valid for 300 seconds
@@ -469,6 +493,8 @@ algoliasearch-cmd.sh deleteACL f420238212c54dcfad07ea0aa6d5c45f
 # Deletes an index specific key
 algoliasearch-cmd.sh deleteIndexACL 71671c38001bf3ac857bc82052485107
 ```
+
+
 
 Copy or rename an index
 -------------
