@@ -3,8 +3,6 @@ Algolia Search Command Line API Client
 
 
 
-
-
 [Algolia Search](http://www.algolia.com) is a search API that provides hosted full-text, numerical and faceted search.
 Algolia’s Search API makes it easy to deliver a great search experience in your apps & websites providing:
 
@@ -23,14 +21,14 @@ This command line API Client is a small wrapper around CURL to easily use Algoli
 
 
 
-
 Table of Content
--------------
+================
 **Get started**
 
 1. [Setup](#setup)
 1. [Quick Start](#quick-start)
-1. [Online documentation](#online-documentation)
+1. [Online documentation](#documentation)
+1. [Tutorials](#tutorials)
 
 **Commands reference**
 
@@ -113,25 +111,33 @@ Since the engine is designed to suggest results as you type, you'll generally se
 
 
 
-Online Documentation
-----------------
+Documentation
+================
 
-Check our [online documentation](http://www.algolia.com/doc):
- * [Initial Import](http://www.algolia.com/doc#InitialImport)
- * [Ranking &amp; Relevance](http://www.algolia.com/doc#RankingRelevance)
- * [Settings](http://www.algolia.com/doc#Settings)
- * [Search](http://www.algolia.com/doc#Search)
- * [Incremental Updates](http://www.algolia.com/doc#IncrementalUpdates)
- * [Reindexing](http://www.algolia.com/doc#Reindexing)
- * [Numeric-Search](http://www.algolia.com/doc#Numeric-Search)
- * [Category-Search](http://www.algolia.com/doc#Category-Search)
- * [Faceting](http://www.algolia.com/doc#Faceting)
- * [Geo-Search](http://www.algolia.com/doc#Geo-Search)
- * [Security](http://www.algolia.com/doc#Security)
- * [Indexing Several Types](http://www.algolia.com/doc#IndexingSeveralTypes)
+Check our [online documentation](http://www.algolia.com/doc/guides/shell):
+ * [Initial Import](http://www.algolia.com/doc/guides/shell#InitialImport)
+ * [Ranking &amp; Relevance](http://www.algolia.com/doc/guides/shell#RankingRelevance)
+ * [Indexing](http://www.algolia.com/doc/guides/shell#Indexing)
+ * [Search](http://www.algolia.com/doc/guides/shell#Search)
+ * [Sorting](http://www.algolia.com/doc/guides/shell#Sorting)
+ * [Filtering](http://www.algolia.com/doc/guides/shell#Filtering)
+ * [Faceting](http://www.algolia.com/doc/guides/shell#Faceting)
+ * [Geo-Search](http://www.algolia.com/doc/guides/shell#Geo-Search)
+ * [Security](http://www.algolia.com/doc/guides/shell#Security)
  * [REST API](http://www.algolia.com/doc/rest)
 
+Tutorials
+================
 
+Check our [tutorials](http://www.algolia.com/doc/tutorials):
+ * [Searchbar with auto-completion](http://www.algolia.com/doc/tutorials/auto-complete)
+ * [Searchbar with multi-categories auto-completion](http://www.algolia.com/doc/tutorials/multi-auto-complete)
+ * [Instant-search](http://www.algolia.com/doc/tutorials/instant-search)
+
+
+
+Commands reference
+==================
 
 
 
