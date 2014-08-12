@@ -117,16 +117,16 @@ Since the engine is designed to suggest results as you type, you'll generally se
 Documentation
 ================
 
-Check our [online documentation](http://www.algolia.com/doc/guides/shell):
- * [Initial Import](http://www.algolia.com/doc/guides/shell#InitialImport)
- * [Ranking &amp; Relevance](http://www.algolia.com/doc/guides/shell#RankingRelevance)
- * [Indexing](http://www.algolia.com/doc/guides/shell#Indexing)
- * [Search](http://www.algolia.com/doc/guides/shell#Search)
- * [Sorting](http://www.algolia.com/doc/guides/shell#Sorting)
- * [Filtering](http://www.algolia.com/doc/guides/shell#Filtering)
- * [Faceting](http://www.algolia.com/doc/guides/shell#Faceting)
- * [Geo-Search](http://www.algolia.com/doc/guides/shell#Geo-Search)
- * [Security](http://www.algolia.com/doc/guides/shell#Security)
+Check our [online documentation](http://www.algolia.com/doc/shell):
+ * [Initial Import](http://www.algolia.com/doc/shell#InitialImport)
+ * [Ranking &amp; Relevance](http://www.algolia.com/doc/shell#RankingRelevance)
+ * [Indexing](http://www.algolia.com/doc/shell#Indexing)
+ * [Search](http://www.algolia.com/doc/shell#Search)
+ * [Sorting](http://www.algolia.com/doc/shell#Sorting)
+ * [Filtering](http://www.algolia.com/doc/shell#Filtering)
+ * [Faceting](http://www.algolia.com/doc/shell#Faceting)
+ * [Geo-Search](http://www.algolia.com/doc/shell#Geo-Search)
+ * [Security](http://www.algolia.com/doc/shell#Security)
  * [REST API](http://www.algolia.com/doc/rest)
 
 Tutorials
