@@ -4,7 +4,7 @@
 # APPLICATION_ID=YourApplicationID
 # API_KEY=YourApiKey
 
-HOST="$APPLICATION_ID.algolia.io"
+HOST="$APPLICATION_ID.algolia.net"
 GZIP=0
 VERBOSE=0
 
