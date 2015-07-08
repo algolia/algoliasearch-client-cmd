@@ -333,7 +333,7 @@ case $1 in
             rm algolia_batch.json
         }
 
-        while read object; do
+        while read -r object; do
             BATCH+=("$object")
             if [ ${#BATCH[@]} -eq $BATCH_SIZE ]; then
                 push
