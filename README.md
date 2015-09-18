@@ -219,12 +219,18 @@ echo '{"price": { "value": 42, "_operation": "Increment" }}' > price.json
 algoliasearch-cmd.sh partialUpdate contacts myID ./price.json
 ```
 
+Note: Here we are incrementing the value by `42`. To increment just by one, put
+`value:1`.
+
 Example to decrement a numeric value:
 
 ```sh
 echo '{"price": { "value": 42, "_operation": "Decrement" }}' > price.json
 algoliasearch-cmd.sh partialUpdate contacts myID ./price.json
 ```
+
+Note: Here we are decrementing the value by `42`. To decrement just by one, put
+`value:1`.
 
 Search
 -------------
