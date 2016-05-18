@@ -7,6 +7,7 @@
 
 
 
+
 <!--NO_HTML-->
 
 [Algolia Search](https://www.algolia.com) is a hosted full-text, numerical, and faceted search engine capable of delivering realtime results from the first keystroke.
@@ -14,6 +15,7 @@
 <!--/NO_HTML-->
 
 Our command line API client is a small wrapper around CURL to make it easier to use the [Algolia Search REST API](https://www.algolia.com/doc/rest).
+
 
 
 
@@ -740,6 +742,8 @@ You can use the following optional arguments:
         <p>A string that contains the list of attributes you want to retrieve in order to minimize the size of the JSON answer.</p>
 
 <p>Attributes are separated with a comma (for example <code>&quot;name,address&quot;</code>). You can also use a string array encoding (for example <code>[&quot;name&quot;,&quot;address&quot;]</code> ). By default, all attributes are retrieved. You can also use <code>*</code> to retrieve all values when an <strong>attributesToRetrieve</strong> setting is specified for your index.</p>
+
+<p><code>objectID</code> is always retrieved even when not specified.</p>
 
       </td>
     </tr>
