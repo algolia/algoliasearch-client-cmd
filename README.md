@@ -250,7 +250,7 @@ Search
 
 To perform a search, you only need to specify the index name and query.
 
-The search query allows only to retrieve 1000 hits, if you need to retrieve more than 1000 hits for seo, you can use [Backup / Retrieve all index content](#backup--retrieve-of-all-index-content)
+The search query allows only to retrieve 1000 hits, if you need to retrieve more than 1000 hits for seo, you can use [Backup / Retrieve all index content](#backup--export-an-index)
 
 ```sh
 algoliasearch-cmd.sh query contacts "jimmie paint" "attributesToRetrieve=firstname,lastname&hitsPerPage=50"
