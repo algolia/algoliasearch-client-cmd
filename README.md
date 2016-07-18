@@ -1,5 +1,7 @@
 <!--NO_HTML-->
 
+**DEPRECATED**
+
 # Algolia Search Command Line API Client
 
 <!--/NO_HTML-->
