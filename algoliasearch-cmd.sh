@@ -66,14 +66,8 @@ esac
 shift
 
 request() {
-if [ "$(uname)" == "Darwin" ]; then
-    template=algolia
-else
-    template=algoliaXXX
-fi
-
-    stdout=`mktemp -t $template`
-    stderr=`mktemp -t $template`
+    stdout=`mktemp -t algolia.XXX`
+    stderr=`mktemp -t algolia.XXX`
     code=0
     for domain in ".algolia.net" "-1.algolianet.com" "-2.algolianet.com" "-3.algolianet.com"; do
         url="https://$APPLICATION_ID$domain$path"
