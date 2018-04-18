@@ -66,8 +66,8 @@ esac
 shift
 
 request() {
-    stdout=`mktemp -t algolia`
-    stderr=`mktemp -t algolia`
+    stdout=`mktemp -t algolia.XXX`
+    stderr=`mktemp -t algolia.XXX`
     code=0
     for domain in ".algolia.net" "-1.algolianet.com" "-2.algolianet.com" "-3.algolianet.com"; do
         url="https://$APPLICATION_ID$domain$path"
